@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.ipch
 
 # Compiled Dynamic libraries
 *.so
