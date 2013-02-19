@@ -1,8 +1,10 @@
 #pragma once
 
+#include "ODBCHandle.h"
+
 namespace ODBCLib {
 
-class CEnvironmentHandle {
+class CEnvironmentHandle : public CODBCHandle {
 // constructor & destructor
 public:
 	CEnvironmentHandle();
@@ -11,7 +13,7 @@ public:
 // operator
 public:
 	operator SQLHENV() const {
-		return m_environmentHandle;
+		return m_handle;
 	};
 
 // public method
@@ -21,18 +23,6 @@ public:
 
 // public const method
 private:
-	bool isHandleEnable() const {
-		return (m_environmentHandle != SQL_NULL_HANDLE);
-	}
-
-// private method
-private:
-	void FreeHandle();
-
-// private member
-private:
-	SQLHENV m_environmentHandle;
-
 };	// end of... class CEnvironmentHandle
 
 }	// end of... namespace ODBCLib

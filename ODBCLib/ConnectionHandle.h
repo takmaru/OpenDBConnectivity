@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
+#include "ODBCHandle.h"
 
 namespace ODBCLib {
 
-class CConnectionHandle {
+class CConnectionHandle : public CODBCHandle {
 // constructor & destructor
 public:
 	explicit CConnectionHandle(SQLHENV environmentHandle);
@@ -13,7 +13,7 @@ public:
 // operator
 public:
 	operator SQLHDBC() const {
-		return m_connectionHandle;
+		return static_cast<SQLHDBC>(m_handle);
 	};
 
 // public method
@@ -24,15 +24,6 @@ public:
 	bool StartTransaction();
 	bool Commit();
 	bool Rollback();
-
-// private method
-private:
-	void FreeHandle();
-
-// private member
-private:
-	SQLHDBC m_connectionHandle;
-
 };	// end of... class CConnectionHandle
 
 }	// end of... namespace ODBCLib

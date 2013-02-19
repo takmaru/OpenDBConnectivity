@@ -1,12 +1,10 @@
 #pragma once
 
-#include <vector>
-#include <map>
-#include <string>
-
 namespace ODBCLib {
 
-class CErrorInfo {
+class CODBCHandle;
+
+class CDiagInfo {
 // private class
 private:
 	struct _FieldInfo {
@@ -46,8 +44,8 @@ private:
 
 // constructor & destructor
 public:
-	CErrorInfo(SQLSMALLINT handleType, SQLHANDLE sqlHandle);
-	~CErrorInfo();
+	explicit CDiagInfo(CODBCHandle& handle);
+	~CDiagInfo();
 
 // public const method
 public:
@@ -92,6 +90,8 @@ private:
 private:
 	SQLSMALLINT m_type;
 	SQLHANDLE m_handle;
+
+	SQLINTEGER m_recordCount;
 	std::vector<Record> m_errors;
 };	// end of... class CStatementHandle
 

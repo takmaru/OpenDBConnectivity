@@ -12,28 +12,33 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConnectionHandle.h" />
+    <ClInclude Include="DiagInfo.h" />
+    <ClInclude Include="DiagRecord.h" />
     <ClInclude Include="EnvironmentHandle.h" />
-    <ClInclude Include="ErrInfo\ErrorInfo.h" />
-    <ClInclude Include="Include\ODBCLibDef.h" />
-    <ClInclude Include="Include\ODBCLibInclude.h" />
+    <ClInclude Include="ODBCHandle.h" />
+    <ClInclude Include="ODBCLibDef.h" />
+    <ClInclude Include="ODBCLibException.h" />
+    <ClInclude Include="ODBCLibInclude.h" />
     <ClInclude Include="ODBCLibUtil.h" />
     <ClInclude Include="ODBCSession.h" />
     <ClInclude Include="ODBCStatement.h" />
-    <ClInclude Include="ResultSet\ResultSet.h" />
     <ClInclude Include="StatementHandle.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectionHandle.cpp" />
+    <ClCompile Include="DiagInfo.cpp" />
+    <ClCompile Include="DiagRecord.cpp" />
     <ClCompile Include="EnvironmentHandle.cpp" />
-    <ClCompile Include="ErrInfo\ErrorInfo.cpp" />
+    <ClCompile Include="ODBCHandle.cpp" />
+    <ClCompile Include="ODBCLibException.cpp" />
     <ClCompile Include="ODBCLibUtil.cpp" />
     <ClCompile Include="ODBCSession.cpp" />
     <ClCompile Include="ODBCStatement.cpp" />
-    <ClCompile Include="ResultSet\ResultSet.cpp" />
     <ClCompile Include="StatementHandle.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">

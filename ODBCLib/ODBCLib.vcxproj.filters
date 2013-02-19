@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="ErrInfo\ErrorInfo.cpp" />
     <ClCompile Include="ODBCLibUtil.cpp" />
-    <ClCompile Include="ResultSet\ResultSet.cpp" />
     <ClCompile Include="ConnectionHandle.cpp">
       <Filter>Handle</Filter>
     </ClCompile>
@@ -16,12 +14,19 @@
     <ClCompile Include="ODBCSession.cpp" />
     <ClCompile Include="ODBCStatement.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ODBCLibException.cpp" />
+    <ClCompile Include="ODBCHandle.cpp">
+      <Filter>Handle</Filter>
+    </ClCompile>
+    <ClCompile Include="DiagInfo.cpp">
+      <Filter>DiagInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="DiagRecord.cpp">
+      <Filter>DiagInfo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ErrInfo\ErrorInfo.h" />
-    <ClInclude Include="Include\ODBCLibInclude.h" />
     <ClInclude Include="ODBCLibUtil.h" />
-    <ClInclude Include="ResultSet\ResultSet.h" />
     <ClInclude Include="ConnectionHandle.h">
       <Filter>Handle</Filter>
     </ClInclude>
@@ -34,10 +39,25 @@
     <ClInclude Include="ODBCSession.h" />
     <ClInclude Include="ODBCStatement.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ODBCLibDef.h" />
+    <ClInclude Include="ODBCLibInclude.h" />
+    <ClInclude Include="ODBCLibException.h" />
+    <ClInclude Include="ODBCHandle.h">
+      <Filter>Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="DiagInfo.h">
+      <Filter>DiagInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DiagRecord.h">
+      <Filter>DiagInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Handle">
       <UniqueIdentifier>{f5515427-8d76-4631-9a3e-276aea94e52a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DiagInfo">
+      <UniqueIdentifier>{233c2af3-55ce-4e83-bede-c2a10278ef43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

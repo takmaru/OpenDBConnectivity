@@ -1,13 +1,11 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
-#include "Include/ODBCLibDef.h"
+#include "ODBCHandle.h"
+#include "ODBCLibDef.h"
 
 namespace ODBCLib {
 
-class CStatementHandle {
+class CStatementHandle : public CODBCHandle {
 // constructor & destructor
 public:
 	explicit CStatementHandle(SQLHDBC connectionHandle);
@@ -16,7 +14,7 @@ public:
 // operator
 public:
 	operator SQLHSTMT() const {
-		return m_statementHandle;
+		return static_cast<SQLHSTMT>(m_handle);
 	};
 
 // public method
@@ -46,14 +44,6 @@ public:
 	SQLRETURN Fetch();
 
 	bool SetRowWiseBinding(int rowLen, int rowCount, SQLUSMALLINT* pStatusArray, SQLULEN* pProcCount);
-
-// private method
-private:
-	void FreeHandle();
-
-// private member
-private:
-	SQLHSTMT m_statementHandle;
 };	// end of... class CStatementHandle
 
 }	// end of... namespace ODBCLib

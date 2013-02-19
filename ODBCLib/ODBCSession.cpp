@@ -3,6 +3,7 @@
 
 #include "EnvironmentHandle.h"
 #include "ConnectionHandle.h"
+#include "DiagInfo.h"
 
 namespace {
 	static const std::wstring defaultDriverName = L"{SQL Server Native Client 10.0}";
@@ -19,13 +20,20 @@ ODBCLib::CODBCSession::~CODBCSession() {
 }
 
 bool ODBCLib::CODBCSession::startSession() {
-	bool ret = false;
-	if(m_environmentHandle->setVersion(m_ODBCVersion) == SQL_SUCCESS) {
+	SQLRETURN ret = SQL_SUCCESS;
+
+	ret = m_environmentHandle->setVersion(m_ODBCVersion);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CODBCSession::startSession() CEnvironmentHandle::setVersion()=" << ret << std::endl <<
+			CDiagInfo(SQL_HANDLE_ENV, (SQLHENV)m_environmentHandle);
+		return false;
+		throw CODBCLibException("CODBCSession::startSession() CEnvironmentHandle::setVersion");
+	}
 		if(m_ConnectionHandle->connect(connectionString().c_str()) == SQL_SUCCESS) {
 			ret = true;
 		}
 	}
-	return ret;
+	return result;
 }
 bool ODBCLib::CODBCSession::endSession() {
 	return (m_ConnectionHandle->disconnect() == SQL_SUCCESS);
