@@ -12,7 +12,7 @@ namespace {
 ODBCLib::CODBCSession::CODBCSession():
 	m_environmentHandle(new CEnvironmentHandle()),
 	m_ODBCVersion(SQL_OV_ODBC3),
-	m_ConnectionHandle(new CConnectionHandle((SQLHENV)*m_environmentHandle)),
+	m_connectionHandle(new CConnectionHandle((SQLHENV)*m_environmentHandle)),
 	m_driverName(defaultDriverName), m_serverName(), m_databaseName(), m_isTrutedConnection(true) {
 }
 
@@ -20,23 +20,24 @@ ODBCLib::CODBCSession::~CODBCSession() {
 }
 
 bool ODBCLib::CODBCSession::startSession() {
-	SQLRETURN ret = SQL_SUCCESS;
-
-	ret = m_environmentHandle->setVersion(m_ODBCVersion);
-	if(ret != SQL_SUCCESS) {
-		std::wcerr << L"CODBCSession::startSession() CEnvironmentHandle::setVersion()=" << ret << std::endl <<
-			CDiagInfo(SQL_HANDLE_ENV, (SQLHENV)m_environmentHandle);
-		return false;
-		throw CODBCLibException("CODBCSession::startSession() CEnvironmentHandle::setVersion");
-	}
-		if(m_ConnectionHandle->connect(connectionString().c_str()) == SQL_SUCCESS) {
-			ret = true;
+	bool result = false;
+	SQLRETURN ret = m_environmentHandle->setVersion(m_ODBCVersion);
+	if(ret == SQL_SUCCESS) {
+		ret = m_connectionHandle->connect(connectionString().c_str());
+		if(ret == SQL_SUCCESS) {
+			result = true;
+		} else {
+			std::wcerr << L"CODBCSession::startSession() CConnectionHandle::connect()=" << ret << std::endl <<
+				ODBCLib::CDiagInfo(*m_connectionHandle).description();
 		}
+	} else {
+		std::wcerr << L"CODBCSession::startSession() CEnvironmentHandle::setVersion()=" << ret << std::endl <<
+			ODBCLib::CDiagInfo(*m_environmentHandle).description();
 	}
 	return result;
 }
 bool ODBCLib::CODBCSession::endSession() {
-	return (m_ConnectionHandle->disconnect() == SQL_SUCCESS);
+	return (m_connectionHandle->disconnect() == SQL_SUCCESS);
 }
 
 std::wstring ODBCLib::CODBCSession::connectionString() const {

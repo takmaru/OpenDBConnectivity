@@ -5,7 +5,7 @@ ODBCLib::CODBCHandle::CODBCHandle(SQLSMALLINT type) : m_type(type), m_handle(SQL
 }
 
 ODBCLib::CODBCHandle::~CODBCHandle() {
-	FreeHandle()
+	FreeHandle();
 }
 
 void ODBCLib::CODBCHandle::FreeHandle() {

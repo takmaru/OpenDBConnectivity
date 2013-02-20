@@ -68,6 +68,15 @@ ODBCLib::CDiagInfo::~CDiagInfo() {
 }
 
 std::wstring ODBCLib::CDiagInfo::description() const {
+	std::wostringstream oss;
+	DiagRecords::const_iterator it;
+	for(it = m_records.begin(); it != m_records.end(); ++it) {
+		if(it != m_records.begin()) {
+			oss << std::endl;
+		}
+		(*it)->description();
+	}
+	return oss.str();
 /*
 	std::wostringstream oss;
 	for(unsigned int i = 0; i < GetCount(); ++i) {

@@ -43,7 +43,7 @@ private:
 	std::unique_ptr<CEnvironmentHandle> m_environmentHandle;
 	SQLSMALLINT m_ODBCVersion;
 
-	std::unique_ptr<CConnectionHandle> m_ConnectionHandle;
+	std::unique_ptr<CConnectionHandle> m_connectionHandle;
 	std::wstring m_driverName;
 	std::wstring m_serverName;
 	std::wstring m_databaseName;

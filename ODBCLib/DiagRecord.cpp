@@ -25,4 +25,13 @@ ODBCLib::CDiagRecord::~CDiagRecord() {
 }
 
 std::wstring ODBCLib::CDiagRecord::description() const {
+	std::wostringstream oss;
+	oss <<	m_idx << L" : " <<
+			L"line=" << m_line << L", " <<
+			L"severity=" << m_severity << L", " <<
+			L"state=" << m_state << L", " <<
+			L"[" << m_sqlstate << L"]" <<
+			L"[" << m_code << L"]" <<
+			m_message;
+	return oss.str();
 }
