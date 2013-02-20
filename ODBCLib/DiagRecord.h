@@ -7,8 +7,8 @@ class CODBCHandle;
 class CDiagRecord {
 public:
 	CDiagRecord(CODBCHandle& handle, SQLSMALLINT idx);
-	CDiagRecord(const SQLSTATE state, int err, const wchar_t* msg, const FieldInfo& field):
-		m_state(state), m_err(err), m_msg(msg), m_field(field){};
+//	CDiagRecord(const SQLSTATE state, int err, const wchar_t* msg, const FieldInfo& field):
+//		m_state(state), m_err(err), m_msg(msg), m_field(field){};
 	~CDiagRecord();
 
 public:

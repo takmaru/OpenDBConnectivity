@@ -2,10 +2,22 @@
 #include "DiagInfo.h"
 
 #include "ODBCHandle.h"
+#include "DiagRecord.h"
+#include "ODBCLibUtil.h"
 
 ODBCLib::CDiagInfo::CDiagInfo(CODBCHandle& handle):
-	m_type(handle.type()), m_handle(handle.handle()), m_errors() {
+	m_type(handle.type()), m_handle(handle.handle()), m_records() {
 
+	// レコード数取得
+	SQLSMALLINT recordCount = 0;
+	ODBCLib::GetDiagFieldInfo_Value(handle.type(), handle.handle(), 0, SQL_DIAG_NUMBER, &recordCount, SQL_IS_SMALLINT);
+	// 詳細情報取得ループ
+	m_records.reserve(recordCount);
+	SQLSMALLINT idx = 0;
+	while(idx <= recordCount) {
+		m_records.push_back(DiagRecords::value_type(new CDiagRecord(handle, idx)));
+	}
+/*
 	SQLSMALLINT record = 1;
 	SQLSTATE sqlState = {0};
 	SQLINTEGER nativeError = 0;
@@ -15,6 +27,7 @@ ODBCLib::CDiagInfo::CDiagInfo(CODBCHandle& handle):
 
 	SQLINTEGER count = GetRecordCount();
 	while(record <= count) {
+		CDiagRecord
 		SQLSMALLINT msgLen = message.size();
 		 
 		SQLRETURN ret = ::SQLGetDiagRecW(m_type, m_handle, record, sqlState, &nativeError, &(*message.begin()), msgLen, &errorMsgLen);
@@ -49,11 +62,13 @@ ODBCLib::CDiagInfo::CDiagInfo(CODBCHandle& handle):
 			break;
 		}
 	}
+*/
 }
 ODBCLib::CDiagInfo::~CDiagInfo() {
 }
 
 std::wstring ODBCLib::CDiagInfo::description() const {
+/*
 	std::wostringstream oss;
 	for(unsigned int i = 0; i < GetCount(); ++i) {
 
@@ -86,9 +101,11 @@ std::wstring ODBCLib::CDiagInfo::description() const {
 		// Field <<---
 	}
 	return oss.str();
+*/
 }
-
+/*
 SQLINTEGER ODBCLib::CDiagInfo::GetRecordCount() const {
+	ODBCLib::
 	SQLINTEGER count = 0;
 	SQLSMALLINT len = 0;
 	SQLRETURN ret = ::SQLGetDiagFieldW(m_type, m_handle, 0, SQL_DIAG_NUMBER, &count, sizeof(count), &len);
@@ -147,13 +164,14 @@ std::wstring ODBCLib::CDiagInfo::GetDiagFieldInfo_String(SQLSMALLINT record, SQL
 			if(ret == SQL_SUCCESS) {
 				fieldStr = (wchar_t*)(&(*fieldStrBuffer.begin()));
 			} else {
-std::wcerr << L"CDiagInfo::GetDiagFieldInfo_String() SQLGetDiagFieldW(ID:" << diagId << ") error(" << ret << L")" << std::endl;
+				std::wcerr << L"CDiagInfo::GetDiagFieldInfo_String() SQLGetDiagFieldW(ID:" << diagId << ") error(" << ret << L")" << std::endl;
 			}
 		}
 	} else {
 		// getLength error
-std::wcerr << L"CDiagInfo::GetDiagFieldInfo_String() SQLGetDiagFieldW(" << diagId << ") getLength error(" << ret << L")" << std::endl;
+		std::wcerr << L"CDiagInfo::GetDiagFieldInfo_String() SQLGetDiagFieldW(" << diagId << ") getLength error(" << ret << L")" << std::endl;
 	}
 
 	return fieldStr;
 }
+*/
