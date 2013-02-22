@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Transaction.h"
+
 namespace ODBCLib {
 
 class CEnvironmentHandle;
@@ -16,8 +18,14 @@ public:
 	bool startSession();
 	bool endSession();
 
+	CTransaction* beginTransaction();
+
 // setter, getter
 public:
+	bool isConnecting() const {
+		return static_cast<bool>(m_connectionHandle);
+	};
+
 	void setODBCVersion(SQLSMALLINT version) {
 		m_ODBCVersion = version;
 	};
@@ -40,10 +48,13 @@ public:
 	std::wstring connectionString() const;
 
 private:
-	std::unique_ptr<CEnvironmentHandle> m_environmentHandle;
+	bool m_isEnable;
+	bool m_isConnecting;
+
+	std::shared_ptr<CEnvironmentHandle> m_environmentHandle;
 	SQLSMALLINT m_ODBCVersion;
 
-	std::unique_ptr<CConnectionHandle> m_connectionHandle;
+	std::shared_ptr<CConnectionHandle> m_connectionHandle;
 	std::wstring m_driverName;
 	std::wstring m_serverName;
 	std::wstring m_databaseName;

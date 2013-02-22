@@ -1,10 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <list>
-#include <map>
-#include <string>
-
 namespace local {
 
 class CParamPerser {

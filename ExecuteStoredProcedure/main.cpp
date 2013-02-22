@@ -1,20 +1,8 @@
-#include <locale>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-#include <windows.h>
-#include <sql.h>
-#include <sqlext.h>
-
-#include <ODBCLibInclude.h>
-
+#include "stdafx.h"
 #include "ParamParser.h"
 
-void ExecuteStatement(ODBCLib::CStatementHandle& statementHandle, const std::wstring& sql);
-void GetResultSet(ODBCLib::CStatementHandle& statementHandle);
+//void ExecuteStatement(ODBCLib::CStatementHandle& statementHandle, const std::wstring& sql);
+//void GetResultSet(ODBCLib::CStatementHandle& statementHandle);
 
 int wmain(int argc, wchar_t* argv[], wchar_t* arge[]) {
 	std::locale::global(std::locale("", std::locale::ctype));
@@ -52,15 +40,29 @@ int wmain(int argc, wchar_t* argv[], wchar_t* arge[]) {
 	}
 
 
+	ODBCLib::CODBCSession session;
+	session.setServerName(servername.c_str());
+	session.setDatabaseName(dbname.c_str());
+/*
 	std::wstringstream oss;
 	oss << L"DRIVER={SQL Server Native Client 10.0};SERVER=" << servername << L";" <<
 		L"Database=" << dbname << L";" <<
 		L"Trusted_Connection=yes";
 //	std::wstring connectionString(L"DRIVER={SQL Server Native Client 10.0};SERVER=localhost\\SKYSEAMASTERSVR;Trusted_Connection=yes;Database=scvdb");
 	std::wstring connectionString =oss.str();
-
-	std::wcout << L"Ú‘±•¶Žš—ñ=[" << connectionString << L"]" << std::endl;
-
+*/
+	std::wcout << L"Ú‘±•¶Žš—ñ=[" << session.connectionString() << L"]" << std::endl;
+	if(session.startSession()) {
+		std::wcout << L"Ú‘± ¬Œ÷" << std::endl;
+		if(session.endSession()) {
+			std::wcout << L"Ø’f ¬Œ÷" << std::endl;
+		} else {
+			std::wcout << L"Ø’f Ž¸”s" << std::endl;
+		}
+	} else {
+		std::wcout << L"Ú‘± Ž¸”s" << std::endl;
+	}
+/*
 	ODBCLib::CEnvironmentHandle envHandle;
 	ODBCLib::CConnectionHandle connectionHandle(envHandle);
 	if(connectionHandle.connect(connectionString.c_str())) {
@@ -70,10 +72,10 @@ int wmain(int argc, wchar_t* argv[], wchar_t* arge[]) {
 	} else {
 		std::wcout << L"Ú‘± Ž¸”s" << std::endl;
 	}
-
+*/
 	return 0;
 }
-
+/*
 void ExecuteStatement(ODBCLib::CStatementHandle& statementHandle, const std::wstring& sql) {
 
 //	std::wcout << L"SQL=[" << sql << L"]" << std::endl;
@@ -158,3 +160,4 @@ void GetResultSet(ODBCLib::CStatementHandle& statementHandle) {
 		}
 	}
 }
+*/

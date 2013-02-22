@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ParamParser.h"
 
 local::CParamPerser::CParamPerser(int argc, wchar_t* argv[]) :

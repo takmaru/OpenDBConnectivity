@@ -13,7 +13,7 @@ private:
 
 // constructor & destructor
 public:
-	explicit CDiagInfo(CODBCHandle& handle);
+	explicit CDiagInfo(std::shared_ptr<CODBCHandle> handle);
 	~CDiagInfo();
 
 // public const method
@@ -51,7 +51,9 @@ public:
 
 // private method
 private:
-	SQLINTEGER GetRecordCount() const;
+	int recordCount() const {
+		return m_records.size();
+	}
 
 // private member
 private:

@@ -4,10 +4,12 @@
 
 namespace ODBCLib {
 
+class CEnvironmentHandle;
+
 class CConnectionHandle : public CODBCHandle {
 // constructor & destructor
 public:
-	explicit CConnectionHandle(SQLHENV environmentHandle);
+	explicit CConnectionHandle(std::shared_ptr<CEnvironmentHandle> environmentHandle);
 	~CConnectionHandle();
 
 // operator
@@ -21,9 +23,9 @@ public:
 	SQLRETURN connect(const SQLWCHAR* connectionString);
 	SQLRETURN disconnect();
 
-	bool StartTransaction();
-	bool Commit();
-	bool Rollback();
+	SQLRETURN beginTransaction();
+	SQLRETURN commit();
+	SQLRETURN rollback();
 };	// end of... class CConnectionHandle
 
 }	// end of... namespace ODBCLib

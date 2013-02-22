@@ -1,9 +1,16 @@
 #include "stdafx.h"
 #include "ConnectionHandle.h"
 
-ODBCLib::CConnectionHandle::CConnectionHandle(SQLHENV environmentHandle) : CODBCHandle(SQL_HANDLE_DBC) {
+#include "EnvironmentHandle.h"
+#include "DiagInfo.h"
+
+ODBCLib::CConnectionHandle::CConnectionHandle(std::shared_ptr<CEnvironmentHandle> environmentHandle) : CODBCHandle(SQL_HANDLE_DBC) {
 	// ハンドル作成
-	::SQLAllocHandle(SQL_HANDLE_DBC, environmentHandle, &m_handle);
+	SQLRETURN ret = ::SQLAllocHandle(SQL_HANDLE_DBC, environmentHandle->handle(), &m_handle);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CConnectionHandle::CConnectionHandle() SQLAllocHandle()=" << ret << std::endl <<
+			ODBCLib::CDiagInfo(environmentHandle).description() << std::endl;
+	}
 }
 ODBCLib::CConnectionHandle::~CConnectionHandle() {
 }
@@ -18,15 +25,15 @@ SQLRETURN ODBCLib::CConnectionHandle::disconnect() {
 	return ::SQLDisconnect(static_cast<SQLHDBC>(m_handle));
 }
 
-bool ODBCLib::CConnectionHandle::StartTransaction() {
-	// トランザクション開始
-	return SQL_SUCCEEDED(::SQLSetConnectAttrW(static_cast<SQLHDBC>(m_handle), SQL_ATTR_AUTOCOMMIT, static_cast<SQLPOINTER>(SQL_AUTOCOMMIT_OFF), SQL_IS_UINTEGER));
+// トランザクション開始
+SQLRETURN ODBCLib::CConnectionHandle::beginTransaction() {
+	return ::SQLSetConnectAttrW(static_cast<SQLHDBC>(m_handle), SQL_ATTR_AUTOCOMMIT, static_cast<SQLPOINTER>(SQL_AUTOCOMMIT_OFF), SQL_IS_UINTEGER);
 }
-bool ODBCLib::CConnectionHandle::Commit() {
-	// コミット
-	return SQL_SUCCEEDED(::SQLEndTran(SQL_HANDLE_DBC, m_handle, SQL_COMMIT));
+// コミット
+SQLRETURN ODBCLib::CConnectionHandle::commit() {
+	return ::SQLEndTran(SQL_HANDLE_DBC, m_handle, SQL_COMMIT);
 }
-bool ODBCLib::CConnectionHandle::Rollback() {
-	// ロールバック
-	return SQL_SUCCEEDED(::SQLEndTran(SQL_HANDLE_DBC, m_handle, SQL_ROLLBACK));
+// ロールバック
+SQLRETURN ODBCLib::CConnectionHandle::rollback() {
+	return ::SQLEndTran(SQL_HANDLE_DBC, m_handle, SQL_ROLLBACK);
 }

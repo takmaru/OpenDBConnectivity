@@ -44,6 +44,7 @@ public:
 	SQLRETURN Fetch();
 
 	bool SetRowWiseBinding(int rowLen, int rowCount, SQLUSMALLINT* pStatusArray, SQLULEN* pProcCount);
+
 };	// end of... class CStatementHandle
 
 }	// end of... namespace ODBCLib

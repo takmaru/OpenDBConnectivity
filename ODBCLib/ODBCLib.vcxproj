@@ -14,6 +14,7 @@
     <ClInclude Include="ConnectionHandle.h" />
     <ClInclude Include="DiagInfo.h" />
     <ClInclude Include="DiagRecord.h" />
+    <ClInclude Include="DiagRecord_Statement.h" />
     <ClInclude Include="EnvironmentHandle.h" />
     <ClInclude Include="ODBCHandle.h" />
     <ClInclude Include="ODBCLibDef.h" />
@@ -24,11 +25,13 @@
     <ClInclude Include="ODBCStatement.h" />
     <ClInclude Include="StatementHandle.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Transaction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectionHandle.cpp" />
     <ClCompile Include="DiagInfo.cpp" />
     <ClCompile Include="DiagRecord.cpp" />
+    <ClCompile Include="DiagRecord_Statement.cpp" />
     <ClCompile Include="EnvironmentHandle.cpp" />
     <ClCompile Include="ODBCHandle.cpp" />
     <ClCompile Include="ODBCLibException.cpp" />
@@ -40,6 +43,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D28945D2-82F4-4882-BF53-91A5259DA7E2}</ProjectGuid>

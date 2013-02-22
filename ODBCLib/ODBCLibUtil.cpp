@@ -27,9 +27,9 @@ bool ODBCLib::GetDiagFieldInfo_String(SQLSMALLINT type, SQLHANDLE handle, SQLSMA
 	SQLSMALLINT bytes = 0;
 	std::vector<unsigned char> fieldStrBuffer;
 	ret = ::SQLGetDiagFieldW(type, handle, record, diagId, NULL, 0, &bytes);
-	if(ret == SQL_SUCCESS) {
+	if(ret == SQL_SUCCESS_WITH_INFO) {
 		if(bytes > 0) {
-			// SQL_SUCCESSでデータ長が返ってきていれば、文字列取得
+			// SQL_SUCCESS_WITH_INFOでデータ長が返ってきていれば、文字列取得
 			bytes += sizeof(wchar_t);	// NULL文字分、追加
 			fieldStrBuffer.resize(bytes, L'\0');
 			wchar_t* bufferPointer = reinterpret_cast<wchar_t*>(&(*fieldStrBuffer.begin()));
@@ -37,10 +37,12 @@ bool ODBCLib::GetDiagFieldInfo_String(SQLSMALLINT type, SQLHANDLE handle, SQLSMA
 				value = bufferPointer;
 				result = true;
 			}
+		} else {
+			std::wcerr << L"ODBCLibUtil::GetDiagFieldInfo_String() SQLGetDiagFieldW(ID:" << diagId << ") getLength=0" << std::endl;
 		}
 	} else {
 		// getLength error
-		std::wcerr << L"CDiagInfo::GetDiagFieldInfo_String() SQLGetDiagFieldW(ID:" << diagId << ") getLength error(" << ret << L")" << std::endl;
+		std::wcerr << L"ODBCLibUtil::GetDiagFieldInfo_String() SQLGetDiagFieldW(ID:" << diagId << ") getLength error(" << ret << L")" << std::endl;
 	}
 
 	return result;
