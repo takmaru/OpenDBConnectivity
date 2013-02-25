@@ -8,7 +8,7 @@ namespace ODBCLib {
 class CStatementHandle : public CODBCHandle {
 // constructor & destructor
 public:
-	explicit CStatementHandle(SQLHDBC connectionHandle);
+	explicit CStatementHandle(std::shared_ptr<CConnectionHandle> connectionHandle);
 	~CStatementHandle();
 
 // operator
@@ -19,7 +19,7 @@ public:
 
 // public method
 public:
-	SQLRETURN Prepare(const SQLWCHAR* statement);
+	SQLRETURN prepare(SQLWCHAR* statement);
 
 	SQLRETURN BindOutputParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);

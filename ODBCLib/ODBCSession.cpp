@@ -3,6 +3,7 @@
 
 #include "EnvironmentHandle.h"
 #include "ConnectionHandle.h"
+#include "ODBCStatement.h"
 #include "DiagInfo.h"
 
 namespace {
@@ -64,8 +65,17 @@ bool ODBCLib::CODBCSession::endSession() {
 	return result;
 }
 
-ODBCLib::CTransaction* ODBCLib::CODBCSession::beginTransaction() {
-	return new CTransaction(m_connectionHandle);
+std::shared_ptr<ODBCLib::CTransaction> ODBCLib::CODBCSession::beginTransaction() {
+	return std::shared_ptr<ODBCLib::CTransaction>(new CTransaction(m_connectionHandle));
+}
+
+std::shared_ptr<ODBCLib::CODBCStatement> ODBCLib::CODBCSession::createStatement() {
+	return std::shared_ptr<CODBCStatement>(new CODBCStatement(m_connectionHandle));
+}
+std::shared_ptr<ODBCLib::CODBCStatement> ODBCLib::CODBCSession::createStatement(const wchar_t* statement) {
+	std::shared_ptr<ODBCLib::CODBCStatement> result(createStatement());
+	result->prepare(statement);
+	return result;
 }
 
 std::wstring ODBCLib::CODBCSession::connectionString() const {

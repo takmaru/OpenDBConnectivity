@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Transaction.h"
+#include "ODBCStatement.h"
 
 namespace ODBCLib {
 
@@ -18,7 +19,9 @@ public:
 	bool startSession();
 	bool endSession();
 
-	CTransaction* beginTransaction();
+	std::shared_ptr<CTransaction> beginTransaction();
+	std::shared_ptr<CODBCStatement> createStatement();
+	std::shared_ptr<CODBCStatement> createStatement(const wchar_t* statement);
 
 // setter, getter
 public:
@@ -48,7 +51,6 @@ public:
 	std::wstring connectionString() const;
 
 private:
-	bool m_isEnable;
 	bool m_isConnecting;
 
 	std::shared_ptr<CEnvironmentHandle> m_environmentHandle;

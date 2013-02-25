@@ -18,35 +18,6 @@ public:
 
 // public const method
 public:
-/*
-	unsigned int GetCount() const {
-		return m_errors.size();
-	};
-	std::wstring GetState(unsigned int idx) const {
-		if(idx >= m_errors.size()) {
-			return std::wstring();
-		}
-		return m_errors[idx].GetState();
-	};
-	int GetErrorCode(unsigned int idx) const {
-		if(idx >= m_errors.size()) {
-			return 0;
-		}
-		return m_errors[idx].GetErrorCode();
-	};
-	std::wstring GetErrorMessage(unsigned int idx) const {
-		if(idx >= m_errors.size()) {
-			return std::wstring();
-		}
-		return m_errors[idx].GetErrorMessage();
-	};
-	FieldInfo GetFieldInfo(unsigned int idx) const {
-		if(idx >= m_errors.size()) {
-			return FieldInfo();
-		}
-		return m_errors[idx].GetFieldInfo();
-	};
-*/
 	std::wstring description() const;
 
 // private method

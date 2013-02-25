@@ -1,23 +1,24 @@
 #include "stdafx.h"
 #include "StatementHandle.h"
 
-#include <iostream>
-#include <vector>
-#include <iomanip>
-#include <sstream>
+#include "ConnectionHandle.h"
+#include "DiagInfo.h"
 
-ODBCLib::CStatementHandle::CStatementHandle(SQLHDBC connectionHandle) : CODBCHandle(SQL_HANDLE_STMT) {
+ODBCLib::CStatementHandle::CStatementHandle(std::shared_ptr<CConnectionHandle> connectionHandle):
+	CODBCHandle(SQL_HANDLE_STMT) {
 	// ハンドル作成
-	::SQLAllocHandle(SQL_HANDLE_STMT, connectionHandle, &m_handle);
+	SQLRETURN ret = ::SQLAllocHandle(SQL_HANDLE_STMT, connectionHandle->handle(), &m_handle);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CStatementHandle::CStatementHandle() SQLAllocHandle()=" << ret << std::endl <<
+			ODBCLib::CDiagInfo(connectionHandle).description() << std::endl;
+	}
 }
 ODBCLib::CStatementHandle::~CStatementHandle() {
 }
 
-SQLRETURN ODBCLib::CStatementHandle::Prepare(const SQLWCHAR* statement) {
-	SQLWCHAR statementCopy[1024] = {0};
-	wcscpy_s(statementCopy, statement);
+SQLRETURN ODBCLib::CStatementHandle::prepare(SQLWCHAR* statement) {
 	// ステートメントの準備
-	return ::SQLPrepareW(static_cast<SQLHSTMT>(m_handle), statementCopy, SQL_NTS);
+	return ::SQLPrepareW(static_cast<SQLHSTMT>(m_handle), statement, SQL_NTS);
 }
 
 SQLRETURN ODBCLib::CStatementHandle::BindOutputParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd) {
