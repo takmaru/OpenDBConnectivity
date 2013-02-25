@@ -1,9 +1,6 @@
 #pragma once
 
-#include <algorithm>
-#include <vector>
-
-#include "../Include/ODBCLibDef.h"
+#include "ODBCLibDef.h"
 
 namespace ODBCLib {
 
@@ -101,7 +98,7 @@ private:
 
 // constructor & destructor
 public:
-	explicit CResultSet(CStatementHandle& statementHandle);
+	explicit CResultSet(std::shared_ptr<CStatementHandle> statementHandle);
 	~CResultSet();
 
 // public method
@@ -132,7 +129,7 @@ private:
 
 // private member
 private:
-	CStatementHandle& m_statementHandle;
+	std::shared_ptr<CStatementHandle> m_statementHandle;
 	BindColumns m_bindColumns;
 	int m_rowBytes;
 	int m_colBytesMax;

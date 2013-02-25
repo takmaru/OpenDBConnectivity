@@ -5,8 +5,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "../Handle/StatementHandle.h"
-#include "../ErrInfo/ErrorInfo.h"
+#include "StatementHandle.h"
+#include "DiagInfo.h"
 
 
 ODBCLib::CBindColumn::CBindColumn(const ColumnInfo& columnInfo):
@@ -110,7 +110,7 @@ std::wstring ODBCLib::CBindColumn::description_value(int idx) const {
 }
 
 
-ODBCLib::CResultSet::CResultSet(ODBCLib::CStatementHandle& statementHandle):
+ODBCLib::CResultSet::CResultSet(std::shared_ptr<CStatementHandle> statementHandle):
 	m_statementHandle(statementHandle), m_bindColumns(), m_rowBytes(0), m_colBytesMax(0),
 	m_rowCount(0), m_rowStatuses() {
 

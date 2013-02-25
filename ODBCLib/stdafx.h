@@ -15,3 +15,4 @@
 #include <sstream>
 #include <memory>
 #include <exception>
+#include <algorithm>

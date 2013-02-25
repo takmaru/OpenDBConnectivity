@@ -21,13 +21,13 @@ public:
 public:
 	SQLRETURN prepare(SQLWCHAR* statement);
 
+	SQLRETURN execute();
+	SQLRETURN MoreResults();
+
 	SQLRETURN BindOutputParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, wchar_t* param, SQLSMALLINT paramSize, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, __int64* param, SQLINTEGER* lenOrInd);
-
-	SQLRETURN Execute();
-	SQLRETURN MoreResults();
 
 	SQLSMALLINT GetResult_ColCount();
 	SQLLEN GetResult_ColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID);

@@ -28,6 +28,8 @@
     <ClCompile Include="DiagRecord_Statement.cpp">
       <Filter>DiagInfo</Filter>
     </ClCompile>
+    <ClCompile Include="StatementResult.cpp" />
+    <ClCompile Include="ResultSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ODBCLibUtil.h" />
@@ -59,6 +61,8 @@
     <ClInclude Include="DiagRecord_Statement.h">
       <Filter>DiagInfo</Filter>
     </ClInclude>
+    <ClInclude Include="StatementResult.h" />
+    <ClInclude Include="ResultSet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Handle">

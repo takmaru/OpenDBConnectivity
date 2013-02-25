@@ -23,7 +23,9 @@
     <ClInclude Include="ODBCLibUtil.h" />
     <ClInclude Include="ODBCSession.h" />
     <ClInclude Include="ODBCStatement.h" />
+    <ClInclude Include="ResultSet.h" />
     <ClInclude Include="StatementHandle.h" />
+    <ClInclude Include="StatementResult.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Transaction.h" />
   </ItemGroup>
@@ -38,7 +40,9 @@
     <ClCompile Include="ODBCLibUtil.cpp" />
     <ClCompile Include="ODBCSession.cpp" />
     <ClCompile Include="ODBCStatement.cpp" />
+    <ClCompile Include="ResultSet.cpp" />
     <ClCompile Include="StatementHandle.cpp" />
+    <ClCompile Include="StatementResult.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

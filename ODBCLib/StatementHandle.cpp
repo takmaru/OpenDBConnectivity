@@ -16,10 +16,20 @@ ODBCLib::CStatementHandle::CStatementHandle(std::shared_ptr<CConnectionHandle> c
 ODBCLib::CStatementHandle::~CStatementHandle() {
 }
 
+// ステートメントの準備
 SQLRETURN ODBCLib::CStatementHandle::prepare(SQLWCHAR* statement) {
-	// ステートメントの準備
 	return ::SQLPrepareW(static_cast<SQLHSTMT>(m_handle), statement, SQL_NTS);
 }
+
+// ステートメントの実行
+SQLRETURN ODBCLib::CStatementHandle::execute() {
+	return ::SQLExecute(static_cast<SQLHSTMT>(m_handle));
+}
+// 次の結果取得
+SQLRETURN ODBCLib::CStatementHandle::MoreResults() {
+	return ::SQLMoreResults(static_cast<SQLHSTMT>(m_handle));
+}
+
 
 SQLRETURN ODBCLib::CStatementHandle::BindOutputParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd) {
 	// 出力パラメータ バインド
@@ -40,15 +50,6 @@ SQLRETURN ODBCLib::CStatementHandle::BindParameter(SQLUSMALLINT index, __int64* 
 	// パラメータ バインド
 	return ::SQLBindParameter(static_cast<SQLHSTMT>(m_handle), index, SQL_PARAM_INPUT, SQL_C_SBIGINT, SQL_BIGINT, 0, 0,
 		static_cast<SQLPOINTER>(param), 0, lenOrInd);
-}
-
-SQLRETURN ODBCLib::CStatementHandle::Execute() {
-	// ステートメントの実行
-	return ::SQLExecute(static_cast<SQLHSTMT>(m_handle));
-}
-
-SQLRETURN ODBCLib::CStatementHandle::MoreResults() {
-	return ::SQLMoreResults(static_cast<SQLHSTMT>(m_handle));
 }
 
 SQLSMALLINT ODBCLib::CStatementHandle::GetResult_ColCount() {

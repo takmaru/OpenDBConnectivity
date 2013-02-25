@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StatementResult.h"
+
 namespace ODBCLib {
 
 class CConnectionHandle;
@@ -12,6 +14,8 @@ public:
 
 public:
 	bool prepare(const wchar_t* statement);
+
+	std::shared_ptr<CStatementResult> execute();
 
 private:
 	std::shared_ptr<CStatementHandle> m_statementHandle;
