@@ -22,16 +22,16 @@ public:
 	SQLRETURN prepare(SQLWCHAR* statement);
 
 	SQLRETURN execute();
-	SQLRETURN MoreResults();
+	SQLRETURN nextResult();
 
 	SQLRETURN BindOutputParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, int* param, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, wchar_t* param, SQLSMALLINT paramSize, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, __int64* param, SQLINTEGER* lenOrInd);
 
-	SQLSMALLINT GetResult_ColCount();
-	SQLLEN GetResult_ColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID);
-	std::wstring GetResult_ColAttrString(SQLUSMALLINT col, SQLUSMALLINT fieldID);
+	SQLRETURN getResultColCount(SQLSMALLINT& resultColCount);
+	SQLRETURN getResultColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID, SQLLEN& attr);
+	SQLRETURN getResultColAttr_String(SQLUSMALLINT col, SQLUSMALLINT fieldID, std::wstring& attr);
 
 	SQLLEN GetRowCount();
 	bool IsNoCount();

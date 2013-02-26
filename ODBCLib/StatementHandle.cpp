@@ -26,7 +26,7 @@ SQLRETURN ODBCLib::CStatementHandle::execute() {
 	return ::SQLExecute(static_cast<SQLHSTMT>(m_handle));
 }
 // 次の結果取得
-SQLRETURN ODBCLib::CStatementHandle::MoreResults() {
+SQLRETURN ODBCLib::CStatementHandle::nextResult() {
 	return ::SQLMoreResults(static_cast<SQLHSTMT>(m_handle));
 }
 
@@ -52,31 +52,27 @@ SQLRETURN ODBCLib::CStatementHandle::BindParameter(SQLUSMALLINT index, __int64* 
 		static_cast<SQLPOINTER>(param), 0, lenOrInd);
 }
 
-SQLSMALLINT ODBCLib::CStatementHandle::GetResult_ColCount() {
-	SQLSMALLINT colcnt = 0;
-	::SQLNumResultCols(static_cast<SQLHSTMT>(m_handle), &colcnt);
-	return colcnt;
+SQLRETURN ODBCLib::CStatementHandle::getResultColCount(SQLSMALLINT& resultColCount) {
+	return ::SQLNumResultCols(static_cast<SQLHSTMT>(m_handle), &resultColCount);
 }
 
-SQLLEN ODBCLib::CStatementHandle::GetResult_ColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID) {
-	SQLLEN attr = 0;
-	::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, NULL, &attr);
-	return attr;
+SQLRETURN ODBCLib::CStatementHandle::getResultColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID, SQLLEN& attr) {
+	return ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, NULL, &attr);
 }
 
-std::wstring ODBCLib::CStatementHandle::GetResult_ColAttrString(SQLUSMALLINT col, SQLUSMALLINT fieldID) {
+SQLRETURN ODBCLib::CStatementHandle::getResultColAttr_String(SQLUSMALLINT col, SQLUSMALLINT fieldID, std::wstring& attr) {
 	std::wstring attrStr;
 
 	SQLRETURN ret = SQL_SUCCESS;
 	SQLSMALLINT bytes = 0;
-	std::vector<unsigned char> attrStrBuffer;
+	
 	ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, &bytes, NULL);
 	if(ret == SQL_SUCCESS) {
 		if(bytes > 0) {
 			// SQL_SUCCESSでデータ長が返ってきていれば、文字列取得
 			bytes += sizeof(wchar_t);	// NULL文字分、追加
-			attrStrBuffer.resize(bytes, L'\0');
-			ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, &(*attrStrBuffer.begin()), bytes, &bytes, NULL);
+			std::vector<unsigned char> attrBuffer(bytes, L'\0');
+			ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, &(*attrBuffer.begin()), bytes, &bytes, NULL);
 			if(ret == SQL_SUCCESS) {
 				attrStr = (wchar_t*)(&(*attrStrBuffer.begin()));
 			} else {

@@ -30,6 +30,7 @@
     </ClCompile>
     <ClCompile Include="StatementResult.cpp" />
     <ClCompile Include="ResultSet.cpp" />
+    <ClCompile Include="ResultColumn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ODBCLibUtil.h" />
@@ -63,6 +64,8 @@
     </ClInclude>
     <ClInclude Include="StatementResult.h" />
     <ClInclude Include="ResultSet.h" />
+    <ClInclude Include="ResultColumn.h" />
+    <ClInclude Include="ColumnAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Handle">

@@ -16,6 +16,7 @@
     <ClInclude Include="DiagRecord.h" />
     <ClInclude Include="DiagRecord_Statement.h" />
     <ClInclude Include="EnvironmentHandle.h" />
+    <ClInclude Include="ColumnAttribute.h" />
     <ClInclude Include="ODBCHandle.h" />
     <ClInclude Include="ODBCLibDef.h" />
     <ClInclude Include="ODBCLibException.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="ODBCLibUtil.h" />
     <ClInclude Include="ODBCSession.h" />
     <ClInclude Include="ODBCStatement.h" />
+    <ClInclude Include="ResultColumn.h" />
     <ClInclude Include="ResultSet.h" />
     <ClInclude Include="StatementHandle.h" />
     <ClInclude Include="StatementResult.h" />
@@ -40,6 +42,7 @@
     <ClCompile Include="ODBCLibUtil.cpp" />
     <ClCompile Include="ODBCSession.cpp" />
     <ClCompile Include="ODBCStatement.cpp" />
+    <ClCompile Include="ResultColumn.cpp" />
     <ClCompile Include="ResultSet.cpp" />
     <ClCompile Include="StatementHandle.cpp" />
     <ClCompile Include="StatementResult.cpp" />

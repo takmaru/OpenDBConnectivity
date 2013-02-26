@@ -114,62 +114,71 @@ ODBCLib::CResultSet::CResultSet(std::shared_ptr<CStatementHandle> statementHandl
 	m_statementHandle(statementHandle), m_bindColumns(), m_rowBytes(0), m_colBytesMax(0),
 	m_rowCount(0), m_rowStatuses() {
 
-	SQLSMALLINT colCount = m_statementHandle.GetResult_ColCount();
-	if(colCount > 0) {
-		m_bindColumns.reserve(colCount);
-		for(SQLSMALLINT i = 1; i <= colCount; i++) {
-			ColumnInfo colInfo;
-			colInfo.name = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_NAME);
-			colInfo.type = (SQLSMALLINT)m_statementHandle.GetResult_ColAttr(i, SQL_DESC_TYPE);
-			colInfo.typeName = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_TYPE_NAME);
-			colInfo.length = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_LENGTH);
-			colInfo.bytes = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_OCTET_LENGTH);
-/*			
-			colInfo.columnName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_COLUMN_NAME);
-			colInfo.tableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_TABLE_NAME);
-			colInfo.baseTableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_TABLE_NAME);
-			colInfo.schemaName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_SCHEMA_NAME);
-			colInfo.catalogName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_CATALOG_NAME);
-			colInfo.label = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LABEL);
+	SQLSMALLINT resultColCount = 0;
+	SQLRETURN ret = m_statementHandle->getResultColCount(resultColCount);
+	if(ret == SQL_SUCCESS) {
+		if(resultColCount > 0) {
+			m_bindColumns.reserve(resultColCount);
+			for(SQLSMALLINT i = 1; i <= resultColCount; i++) {
+				ColumnInfo colInfo;
+				colInfo.name = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_NAME);
+				colInfo.type = (SQLSMALLINT)m_statementHandle.GetResult_ColAttr(i, SQL_DESC_TYPE);
+				colInfo.typeName = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_TYPE_NAME);
+				colInfo.length = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_LENGTH);
+				colInfo.bytes = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_OCTET_LENGTH);
+	/*			
+				colInfo.columnName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_COLUMN_NAME);
+				colInfo.tableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_TABLE_NAME);
+				colInfo.baseTableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_TABLE_NAME);
+				colInfo.schemaName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_SCHEMA_NAME);
+				colInfo.catalogName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_CATALOG_NAME);
+				colInfo.label = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LABEL);
 
-			colInfo.literalPrefix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_PREFIX);
-			colInfo.literalSuffix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_SUFFIX);
+				colInfo.literalPrefix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_PREFIX);
+				colInfo.literalSuffix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_SUFFIX);
 
-			colInfo.conciseType = statementHandle.GetResult_ColAttr(i, SQL_DESC_CONCISE_TYPE);
-			colInfo.localTypeName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LOCAL_TYPE_NAME);
+				colInfo.conciseType = statementHandle.GetResult_ColAttr(i, SQL_DESC_CONCISE_TYPE);
+				colInfo.localTypeName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LOCAL_TYPE_NAME);
 
-			colInfo.displaySize = statementHandle.GetResult_ColAttr(i, SQL_DESC_DISPLAY_SIZE);
+				colInfo.displaySize = statementHandle.GetResult_ColAttr(i, SQL_DESC_DISPLAY_SIZE);
 
-			colInfo.isAutoUniqueValue = statementHandle.GetResult_ColAttr(i, SQL_DESC_AUTO_UNIQUE_VALUE);
-			colInfo.isCaseSesitive = statementHandle.GetResult_ColAttr(i, SQL_DESC_CASE_SENSITIVE);
-			colInfo.isFixedPrecScale = statementHandle.GetResult_ColAttr(i, SQL_DESC_FIXED_PREC_SCALE);
-			colInfo.isNullable = statementHandle.GetResult_ColAttr(i, SQL_DESC_NULLABLE);
-			colInfo.isUnsigned = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNSIGNED);
+				colInfo.isAutoUniqueValue = statementHandle.GetResult_ColAttr(i, SQL_DESC_AUTO_UNIQUE_VALUE);
+				colInfo.isCaseSesitive = statementHandle.GetResult_ColAttr(i, SQL_DESC_CASE_SENSITIVE);
+				colInfo.isFixedPrecScale = statementHandle.GetResult_ColAttr(i, SQL_DESC_FIXED_PREC_SCALE);
+				colInfo.isNullable = statementHandle.GetResult_ColAttr(i, SQL_DESC_NULLABLE);
+				colInfo.isUnsigned = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNSIGNED);
 
-			colInfo.numPrecRadix = statementHandle.GetResult_ColAttr(i, SQL_DESC_NUM_PREC_RADIX);
-			colInfo.precision = statementHandle.GetResult_ColAttr(i, SQL_DESC_PRECISION);
-			colInfo.scale = statementHandle.GetResult_ColAttr(i, SQL_DESC_SCALE);
-			colInfo.searchable = statementHandle.GetResult_ColAttr(i, SQL_DESC_SEARCHABLE);
-			colInfo.unnamed = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNNAMED);
-			colInfo.updatable = statementHandle.GetResult_ColAttr(i, SQL_DESC_UPDATABLE);
-*/
-			m_bindColumns.push_back(CBindColumn(colInfo));
+				colInfo.numPrecRadix = statementHandle.GetResult_ColAttr(i, SQL_DESC_NUM_PREC_RADIX);
+				colInfo.precision = statementHandle.GetResult_ColAttr(i, SQL_DESC_PRECISION);
+				colInfo.scale = statementHandle.GetResult_ColAttr(i, SQL_DESC_SCALE);
+				colInfo.searchable = statementHandle.GetResult_ColAttr(i, SQL_DESC_SEARCHABLE);
+				colInfo.unnamed = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNNAMED);
+				colInfo.updatable = statementHandle.GetResult_ColAttr(i, SQL_DESC_UPDATABLE);
+	*/
+				m_bindColumns.push_back(CBindColumn(colInfo));
 
-			int columnBytes = colInfo.bytes;
-			switch(colInfo.type) {
-			case SQL_CHAR:
-			case SQL_VARCHAR:
-				columnBytes += sizeof(char);
-				break;
-			case SQL_WCHAR:
-			case SQL_WVARCHAR:
-				columnBytes += sizeof(wchar_t);
-				break;
+				int columnBytes = colInfo.bytes;
+				switch(colInfo.type) {
+				case SQL_CHAR:
+				case SQL_VARCHAR:
+					columnBytes += sizeof(char);
+					break;
+				case SQL_WCHAR:
+				case SQL_WVARCHAR:
+					columnBytes += sizeof(wchar_t);
+					break;
+				}
+				m_rowBytes += columnBytes;
+				m_colBytesMax = max(m_colBytesMax, columnBytes);
 			}
-			m_rowBytes += columnBytes;
-			m_colBytesMax = max(m_colBytesMax, columnBytes);
+		} else {
+			std::wcerr << L"CResultSet::CResultSet() resultColCount=" << resultColCount << std::endl;
 		}
+	} else {
+		std::wcerr << L"CResultSet::CResultSet() CStatementHandle::getResultColCount()=" << ret << std::endl <<
+			ODBCLib::CDiagInfo(m_statementHandle).description() << std::endl;
 	}
+
 }
 
 ODBCLib::CResultSet::~CResultSet() {

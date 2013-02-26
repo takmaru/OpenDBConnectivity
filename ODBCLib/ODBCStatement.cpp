@@ -29,3 +29,7 @@ bool ODBCLib::CODBCStatement::prepare(const wchar_t* statement) {
 std::shared_ptr<ODBCLib::CStatementResult> ODBCLib::CODBCStatement::execute() {
 	return std::shared_ptr<ODBCLib::CStatementResult>(new CStatementResult(m_statementHandle, m_statementHandle->execute()));
 }
+
+std::shared_ptr<ODBCLib::CStatementResult> ODBCLib::CODBCStatement::nextResult() {
+	return std::shared_ptr<ODBCLib::CStatementResult>(new CStatementResult(m_statementHandle, m_statementHandle->MoreResults()));
+}

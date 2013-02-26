@@ -16,6 +16,7 @@ public:
 	bool prepare(const wchar_t* statement);
 
 	std::shared_ptr<CStatementResult> execute();
+	std::shared_ptr<CStatementResult> nextResult();
 
 private:
 	std::shared_ptr<CStatementHandle> m_statementHandle;
