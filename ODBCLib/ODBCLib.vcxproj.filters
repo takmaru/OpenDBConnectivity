@@ -65,7 +65,6 @@
     <ClInclude Include="StatementResult.h" />
     <ClInclude Include="ResultSet.h" />
     <ClInclude Include="ResultColumn.h" />
-    <ClInclude Include="ColumnAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Handle">

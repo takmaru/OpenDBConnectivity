@@ -52,36 +52,52 @@ SQLRETURN ODBCLib::CStatementHandle::BindParameter(SQLUSMALLINT index, __int64* 
 		static_cast<SQLPOINTER>(param), 0, lenOrInd);
 }
 
-SQLRETURN ODBCLib::CStatementHandle::getResultColCount(SQLSMALLINT& resultColCount) {
-	return ::SQLNumResultCols(static_cast<SQLHSTMT>(m_handle), &resultColCount);
+
+SQLSMALLINT ODBCLib::CStatementHandle::resultColCount() {
+	SQLSMALLINT colCount = 0;
+	SQLRETURN ret = ::SQLNumResultCols(static_cast<SQLHSTMT>(m_handle), &colCount);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CStatementHandle::resultColCount() SQLNumResultCols()=" << ret << std::endl;
+	}
+	return colCount;
 }
 
-SQLRETURN ODBCLib::CStatementHandle::getResultColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID, SQLLEN& attr) {
-	return ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, NULL, &attr);
+SQLLEN ODBCLib::CStatementHandle::colAttribute(SQLUSMALLINT col, SQLUSMALLINT fieldID) {
+	SQLLEN attr = 0;
+	SQLRETURN ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, NULL, &attr);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CStatementHandle::colAttribute() " <<
+			L"SQLColAttributeW(col:" << col << L" ID:" << fieldID << ")=" << ret << std::endl;
+	}
+	return attr;
 }
 
-SQLRETURN ODBCLib::CStatementHandle::getResultColAttr_String(SQLUSMALLINT col, SQLUSMALLINT fieldID, std::wstring& attr) {
+std::wstring ODBCLib::CStatementHandle::colAttribute_String(SQLUSMALLINT col, SQLUSMALLINT fieldID) {
 	std::wstring attrStr;
 
-	SQLRETURN ret = SQL_SUCCESS;
 	SQLSMALLINT bytes = 0;
-	
-	ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, &bytes, NULL);
+	SQLRETURN ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, NULL, 0, &bytes, NULL);
 	if(ret == SQL_SUCCESS) {
 		if(bytes > 0) {
 			// SQL_SUCCESSでデータ長が返ってきていれば、文字列取得
 			bytes += sizeof(wchar_t);	// NULL文字分、追加
-			std::vector<unsigned char> attrBuffer(bytes, L'\0');
-			ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, &(*attrBuffer.begin()), bytes, &bytes, NULL);
+			std::vector<unsigned char> attrStrBuffer(bytes, L'\0');
+			ret = ::SQLColAttributeW(static_cast<SQLHSTMT>(m_handle), col, fieldID, &(*attrStrBuffer.begin()), bytes, &bytes, NULL);
 			if(ret == SQL_SUCCESS) {
 				attrStr = (wchar_t*)(&(*attrStrBuffer.begin()));
 			} else {
-				std::wcerr << L"CStatementHandle::GetResult_ColAttrString() SQLColAttributeW(ID:" << fieldID << ") error(" << ret << L")" << std::endl;
+				std::wcerr << L"CStatementHandle::colAttribute_String() " <<
+					L"SQLColAttributeW(col:" << col << L" ID:" << fieldID << ")=" << ret << std::endl;
 			}
+		} else {
+			// 成功だが文字列長＝０
+			std::wcerr << L"CStatementHandle::colAttribute_String() " <<
+				L"SQLColAttributeW(col:" << col << L" ID:" << fieldID << ").getLen()=0" << std::endl;
 		}
 	} else {
-		// getLength error
-		std::wcerr << L"CStatementHandle::GetResult_ColAttrString() SQLColAttributeW(ID:" << fieldID << ") getLength error(" << ret << L")" << std::endl;
+		// 文字列長の取得失敗
+		std::wcerr << L"CStatementHandle::colAttribute_String() " <<
+			L"SQLColAttributeW(col:" << col << L" ID:" << fieldID << ").getLen()=" << ret << std::endl;
 	}
 
 	return attrStr;

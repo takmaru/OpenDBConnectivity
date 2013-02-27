@@ -5,6 +5,8 @@
 
 namespace ODBCLib {
 
+class CConnectionHandle;
+
 class CStatementHandle : public CODBCHandle {
 // constructor & destructor
 public:
@@ -29,9 +31,9 @@ public:
 	SQLRETURN BindParameter(SQLUSMALLINT index, wchar_t* param, SQLSMALLINT paramSize, SQLINTEGER* lenOrInd);
 	SQLRETURN BindParameter(SQLUSMALLINT index, __int64* param, SQLINTEGER* lenOrInd);
 
-	SQLRETURN getResultColCount(SQLSMALLINT& resultColCount);
-	SQLRETURN getResultColAttr(SQLUSMALLINT col, SQLUSMALLINT fieldID, SQLLEN& attr);
-	SQLRETURN getResultColAttr_String(SQLUSMALLINT col, SQLUSMALLINT fieldID, std::wstring& attr);
+	SQLSMALLINT resultColCount();
+	SQLLEN colAttribute(SQLUSMALLINT col, SQLUSMALLINT fieldID);
+	std::wstring colAttribute_String(SQLUSMALLINT col, SQLUSMALLINT fieldID);
 
 	SQLLEN GetRowCount();
 	bool IsNoCount();

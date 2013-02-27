@@ -16,7 +16,6 @@
     <ClInclude Include="DiagRecord.h" />
     <ClInclude Include="DiagRecord_Statement.h" />
     <ClInclude Include="EnvironmentHandle.h" />
-    <ClInclude Include="ColumnAttribute.h" />
     <ClInclude Include="ODBCHandle.h" />
     <ClInclude Include="ODBCLibDef.h" />
     <ClInclude Include="ODBCLibException.h" />
