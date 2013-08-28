@@ -26,6 +26,8 @@ public:
 	SQLRETURN beginTransaction();
 	SQLRETURN commit();
 	SQLRETURN rollback();
+
+	SQLULEN attributes(SQLINTEGER attr);
 };	// end of... class CConnectionHandle
 
 }	// end of... namespace ODBCLib

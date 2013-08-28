@@ -8,6 +8,7 @@
 #include <odbcss.h>
 
 // STL
+#include <iomanip>
 #include <iostream>
 #include <vector>
 #include <map>

@@ -31,5 +31,5 @@ std::shared_ptr<ODBCLib::CStatementResult> ODBCLib::CODBCStatement::execute() {
 }
 
 std::shared_ptr<ODBCLib::CStatementResult> ODBCLib::CODBCStatement::nextResult() {
-	return std::shared_ptr<ODBCLib::CStatementResult>(new CStatementResult(m_statementHandle, m_statementHandle->MoreResults()));
+	return std::shared_ptr<ODBCLib::CStatementResult>(new CStatementResult(m_statementHandle, m_statementHandle->nextResult()));
 }

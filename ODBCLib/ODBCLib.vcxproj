@@ -24,6 +24,7 @@
     <ClInclude Include="ODBCSession.h" />
     <ClInclude Include="ODBCStatement.h" />
     <ClInclude Include="ResultColumn.h" />
+    <ClInclude Include="ResultRowCount.h" />
     <ClInclude Include="ResultSet.h" />
     <ClInclude Include="StatementHandle.h" />
     <ClInclude Include="StatementResult.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="ODBCSession.cpp" />
     <ClCompile Include="ODBCStatement.cpp" />
     <ClCompile Include="ResultColumn.cpp" />
+    <ClCompile Include="ResultRowCount.cpp" />
     <ClCompile Include="ResultSet.cpp" />
     <ClCompile Include="StatementHandle.cpp" />
     <ClCompile Include="StatementResult.cpp" />

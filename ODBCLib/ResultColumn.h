@@ -10,6 +10,9 @@ public:
 	~CResultColumn();
 
 public:
+	std::wstring description() const;
+
+public:
 	SQLSMALLINT idx() const {
 		return m_idx;
 	};
@@ -26,9 +29,7 @@ public:
 	SQLINTEGER length() const {
 		return m_length;
 	};
-	SQLINTEGER bytes() const {
-		return m_bytes;
-	};
+	SQLINTEGER bytes() const;
 
 private:
 	SQLSMALLINT m_idx;

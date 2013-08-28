@@ -37,3 +37,12 @@ SQLRETURN ODBCLib::CConnectionHandle::commit() {
 SQLRETURN ODBCLib::CConnectionHandle::rollback() {
 	return ::SQLEndTran(SQL_HANDLE_DBC, m_handle, SQL_ROLLBACK);
 }
+
+SQLULEN ODBCLib::CConnectionHandle::attributes(SQLINTEGER attr) {
+	SQLULEN value = 0;
+	SQLRETURN ret = ::SQLGetConnectAttrW(static_cast<SQLHDBC>(m_handle), attr, &value, 0, NULL);
+	if(ret != SQL_SUCCESS) {
+		std::wcerr << L"CConnectionHandle::attributes() SQLGetConnectAttrW error(" << ret << L")" << std::endl;
+	}
+	return value;
+}

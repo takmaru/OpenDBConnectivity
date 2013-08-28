@@ -103,16 +103,16 @@ std::wstring ODBCLib::CStatementHandle::colAttribute_String(SQLUSMALLINT col, SQ
 	return attrStr;
 }
 
-SQLLEN ODBCLib::CStatementHandle::GetRowCount() {
-	SQLLEN rowCount = 0;
-	SQLRETURN ret = ::SQLRowCount(static_cast<SQLHSTMT>(m_handle), &rowCount);
+SQLLEN ODBCLib::CStatementHandle::resultRowCount() {
+	SQLLEN count = 0;
+	SQLRETURN ret = ::SQLRowCount(static_cast<SQLHSTMT>(m_handle), &count);
 	if(ret != SQL_SUCCESS) {
-		std::wcerr << L"CStatementHandle::GetRowCount() SQLRowCount error(" << ret << L")" << std::endl;
+		std::wcerr << L"CStatementHandle::rowCount() SQLRowCount error(" << ret << L")" << std::endl;
 	}
-	return rowCount;
+	return count;
 }
 
-bool ODBCLib::CStatementHandle::IsNoCount() {
+bool ODBCLib::CStatementHandle::isNoCount() {
 	SQLLEN value = SQL_NC_OFF;
 	SQLRETURN ret = ::SQLGetStmtAttrW(static_cast<SQLHSTMT>(m_handle), SQL_SOPT_SS_NOCOUNT_STATUS, &value, sizeof(value), NULL);
 	if(ret != SQL_SUCCESS) {

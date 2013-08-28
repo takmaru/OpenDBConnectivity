@@ -1,14 +1,11 @@
 #include "stdafx.h"
 #include "ResultSet.h"
 
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-
 #include "StatementHandle.h"
+#include "ResultColumn.h"
 #include "DiagInfo.h"
 
-
+/*
 ODBCLib::CBindColumn::CBindColumn(const ColumnInfo& columnInfo):
 	m_columnInfo(columnInfo), m_columnBytes(0), m_bindRowCount(0), m_buffer(), m_bindLength() {
 	// 列サイズ決定
@@ -34,13 +31,7 @@ void ODBCLib::CBindColumn::Bind(int rowCount, ODBCLib::CStatementHandle& stateme
 	m_buffer.resize((m_bindRowCount) * m_columnBytes, 0);
 	m_bindLength.clear();
 	m_bindLength.resize(m_bindRowCount, 0);
-/*
-std::wcout << L"CBindColumn::Bind() col=" << col <<
-	L" RowCount=" << rowCount <<
-	L" m_buffer.size()=" << m_buffer.size() <<
-	L" m_bindLength.size()=" << m_bindLength.size() <<
-	L" columnBytes=" << columnBytes << std::endl;
-*/
+
 	// バインド
 	SQLRETURN ret = statementHandle.BindCol(col, m_columnInfo.type, &(*m_buffer.begin()), m_columnBytes, &(*m_bindLength.begin()));
 	if(ret != SQL_SUCCESS) {
@@ -56,35 +47,6 @@ std::wstring ODBCLib::CBindColumn::description_column() const {
 		L"type[" << m_columnInfo.type << L":" << m_columnInfo.typeName << L"] " <<
 		L"len=" << m_columnInfo.length << L" " <<
 		L"bytes=" << m_columnInfo.bytes;
-/*
-		L"colName[" << m_columnInfo.columnName << L"] " <<
-		L"tableName[" << m_columnInfo.tableName << L"] " <<
-		L"baseTName[" << m_columnInfo.baseTableName << L"] " <<
-		L"schemaName[" << m_columnInfo.schemaName << L"] " <<
-		L"catalogName[" << m_columnInfo.catalogName << L"] " <<
-		L"label[" << m_columnInfo.label << L"] " <<
-
-		L"pre[" << m_columnInfo.literalPrefix << L"] " <<
-		L"suf[" << m_columnInfo.literalSuffix << L"] " <<
-
-		L"conType=" << m_columnInfo.conciseType << L" " <<
-		L"locTypename[" << m_columnInfo.localTypeName << L"] " <<
-
-		L"dispSize=" << m_columnInfo.displaySize << L" " <<
-
-		L"IsAutoUniqueVal=" << m_columnInfo.isAutoUniqueValue << L" " <<
-		L"IsCaseSensitive=" << m_columnInfo.isCaseSesitive << L" " <<
-		L"IsFixedPreScale=" << m_columnInfo.isFixedPrecScale << L" " <<
-		L"IsNullable=" << m_columnInfo.isNullable << L" " <<
-		L"IsUnsigned=" << m_columnInfo.isUnsigned << L" " <<
-
-		L"numPreRadix=" << m_columnInfo.numPrecRadix << L" " <<
-		L"precision=" << m_columnInfo.precision << L" " <<
-		L"scale=" << m_columnInfo.scale << L" " <<
-		L"searchable=" << m_columnInfo.searchable << L" " <<
-		L"unnamed=" << m_columnInfo.unnamed << L" " <<
-		L"updatable=" << m_columnInfo.updatable;
-*/
 	return oss.str();
 }
 
@@ -108,84 +70,32 @@ std::wstring ODBCLib::CBindColumn::description_value(int idx) const {
 
 	return oss.str();
 }
-
+*/
 
 ODBCLib::CResultSet::CResultSet(std::shared_ptr<CStatementHandle> statementHandle):
-	m_statementHandle(statementHandle), m_bindColumns(), m_rowBytes(0), m_colBytesMax(0),
+	m_statementHandle(statementHandle), m_columns(), m_rowBytes(0), m_maxColByte(0),
 	m_rowCount(0), m_rowStatuses() {
 
-	SQLSMALLINT resultColCount = 0;
-	SQLRETURN ret = m_statementHandle->getResultColCount(resultColCount);
-	if(ret == SQL_SUCCESS) {
-		if(resultColCount > 0) {
-			m_bindColumns.reserve(resultColCount);
-			for(SQLSMALLINT i = 1; i <= resultColCount; i++) {
-				ColumnInfo colInfo;
-				colInfo.name = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_NAME);
-				colInfo.type = (SQLSMALLINT)m_statementHandle.GetResult_ColAttr(i, SQL_DESC_TYPE);
-				colInfo.typeName = m_statementHandle.GetResult_ColAttrString(i, SQL_DESC_TYPE_NAME);
-				colInfo.length = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_LENGTH);
-				colInfo.bytes = m_statementHandle.GetResult_ColAttr(i, SQL_DESC_OCTET_LENGTH);
-	/*			
-				colInfo.columnName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_COLUMN_NAME);
-				colInfo.tableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_TABLE_NAME);
-				colInfo.baseTableName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_BASE_TABLE_NAME);
-				colInfo.schemaName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_SCHEMA_NAME);
-				colInfo.catalogName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_CATALOG_NAME);
-				colInfo.label = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LABEL);
-
-				colInfo.literalPrefix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_PREFIX);
-				colInfo.literalSuffix = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LITERAL_SUFFIX);
-
-				colInfo.conciseType = statementHandle.GetResult_ColAttr(i, SQL_DESC_CONCISE_TYPE);
-				colInfo.localTypeName = statementHandle.GetResult_ColAttrString(i, SQL_DESC_LOCAL_TYPE_NAME);
-
-				colInfo.displaySize = statementHandle.GetResult_ColAttr(i, SQL_DESC_DISPLAY_SIZE);
-
-				colInfo.isAutoUniqueValue = statementHandle.GetResult_ColAttr(i, SQL_DESC_AUTO_UNIQUE_VALUE);
-				colInfo.isCaseSesitive = statementHandle.GetResult_ColAttr(i, SQL_DESC_CASE_SENSITIVE);
-				colInfo.isFixedPrecScale = statementHandle.GetResult_ColAttr(i, SQL_DESC_FIXED_PREC_SCALE);
-				colInfo.isNullable = statementHandle.GetResult_ColAttr(i, SQL_DESC_NULLABLE);
-				colInfo.isUnsigned = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNSIGNED);
-
-				colInfo.numPrecRadix = statementHandle.GetResult_ColAttr(i, SQL_DESC_NUM_PREC_RADIX);
-				colInfo.precision = statementHandle.GetResult_ColAttr(i, SQL_DESC_PRECISION);
-				colInfo.scale = statementHandle.GetResult_ColAttr(i, SQL_DESC_SCALE);
-				colInfo.searchable = statementHandle.GetResult_ColAttr(i, SQL_DESC_SEARCHABLE);
-				colInfo.unnamed = statementHandle.GetResult_ColAttr(i, SQL_DESC_UNNAMED);
-				colInfo.updatable = statementHandle.GetResult_ColAttr(i, SQL_DESC_UPDATABLE);
-	*/
-				m_bindColumns.push_back(CBindColumn(colInfo));
-
-				int columnBytes = colInfo.bytes;
-				switch(colInfo.type) {
-				case SQL_CHAR:
-				case SQL_VARCHAR:
-					columnBytes += sizeof(char);
-					break;
-				case SQL_WCHAR:
-				case SQL_WVARCHAR:
-					columnBytes += sizeof(wchar_t);
-					break;
-				}
-				m_rowBytes += columnBytes;
-				m_colBytesMax = max(m_colBytesMax, columnBytes);
-			}
-		} else {
-			std::wcerr << L"CResultSet::CResultSet() resultColCount=" << resultColCount << std::endl;
+	SQLSMALLINT resultColCount = m_statementHandle->resultColCount();
+	if(resultColCount > 0) {
+		m_columns.reserve(resultColCount);
+		for(SQLSMALLINT i = 1; i <= resultColCount; i++) {
+			// 列情報作成
+			CResultColumn column(i, m_statementHandle);
+			// 一行のバイト数、列中の最大バイトを取得
+			m_rowBytes += column.bytes();
+			m_maxColByte = max(m_maxColByte, column.bytes());
+			// 列情報をリストへ追加
+			m_columns.push_back(CResultColumn(i, m_statementHandle));
 		}
-	} else {
-		std::wcerr << L"CResultSet::CResultSet() CStatementHandle::getResultColCount()=" << ret << std::endl <<
-			ODBCLib::CDiagInfo(m_statementHandle).description() << std::endl;
 	}
-
 }
 
 ODBCLib::CResultSet::~CResultSet() {
 }
 
 SQLRETURN ODBCLib::CResultSet::Fetch(int rowCount/*= 0*/) {
-
+/*
 	// Fetch行数を確定する
 	if(rowCount <= 0) {
 		// 全体の最大バッファサイズ、列毎の最大バッファサイズから超えない範囲の行数を取得
@@ -215,23 +125,25 @@ SQLRETURN ODBCLib::CResultSet::Fetch(int rowCount/*= 0*/) {
 
 	// Fetch
 	return m_statementHandle.Fetch();
+*/
+	return 0;
 }
 
 std::wstring ODBCLib::CResultSet::description() const {
 	std::wostringstream oss;
 
-	oss <<	L"結果セット 列数=" << m_bindColumns.size() <<
+	oss <<	L"結果セット 列数=" << m_columns.size() <<
 			L" 一行のバッファサイズ=" << m_rowBytes <<
-			L" 一列の最大バッファサイズ=" << m_colBytesMax << std::endl;
+			L" 一列の最大バッファサイズ=" << m_maxColByte << std::endl;
 	int idx = 0;
-	BindColumns::const_iterator it;
-	for(it = m_bindColumns.begin(); it != m_bindColumns.end(); ++it) {
+	ResultColumns::const_iterator it;
+	for(it = m_columns.begin(); it != m_columns.end(); ++it) {
 		if(idx > 0) {
 			oss << std::endl;
 		}
 	
 		oss << std::right << std::setw(6) << idx << std::left << L" : " <<
-			it->description_column();
+			it->description();
 
 		idx++;
 	}
@@ -262,7 +174,7 @@ std::wstring ODBCLib::CResultSet::description_resultset() const {
 
 std::wstring ODBCLib::CResultSet::row2str(SQLULEN idx) const {
 	std::wostringstream oss;
-
+/*
 	BindColumns::const_iterator it;
 	for(it = m_bindColumns.begin(); it != m_bindColumns.end(); ++it) {
 		if(it != m_bindColumns.begin()) {
@@ -270,6 +182,6 @@ std::wstring ODBCLib::CResultSet::row2str(SQLULEN idx) const {
 		}
 		oss << it->description_value(idx);
 	}
-
+*/
 	return oss.str();
 }

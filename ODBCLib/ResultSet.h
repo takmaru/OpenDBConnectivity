@@ -45,7 +45,7 @@ public:
 	SQLINTEGER updatable;
 */
 } typedef ColumnInfo;
-
+/*
 class CBindColumn {
 private:
 	typedef std::vector<unsigned char> BindBuffer;
@@ -86,6 +86,8 @@ private:
 	BindBuffer m_buffer;
 	BindLength m_bindLength;
 };
+*/
+class CResultColumn;
 
 class CResultSet {
 private:
@@ -93,8 +95,8 @@ private:
 	static const int MaxColumnBufferSize = 64 * 1024 * 1024;
 	static const int AutoRowCountMax = 1000;
 
-private:
-	typedef std::vector<CBindColumn> BindColumns;
+public:
+	typedef std::vector<CResultColumn> ResultColumns;
 
 // constructor & destructor
 public:
@@ -107,20 +109,10 @@ public:
 
 // public const method
 public:
-	int columnCount() const {
-		return m_bindColumns.size();
+	const ResultColumns& columns() {
+		return m_columns;
 	};
-/*
-	std::wstring columnName(int idx) const {
-		return m_bindColumns[idx].GetColumnName();
-	};
-	SQLINTEGER columnType(int idx) const {
-		return m_bindColumns[idx].GetColumnType();
-	};
-	SQLINTEGER columnBytes(int idx) const {
-		return m_bindColumns[idx].GetColumnBytes();
-	};
-*/
+
 	std::wstring description() const;
 	std::wstring description_resultset() const;
 
@@ -130,9 +122,11 @@ private:
 // private member
 private:
 	std::shared_ptr<CStatementHandle> m_statementHandle;
-	BindColumns m_bindColumns;
+
+	ResultColumns m_columns;
+
 	int m_rowBytes;
-	int m_colBytesMax;
+	int m_maxColByte;
 
 	SQLULEN m_rowCount;
 	RowStatusArray m_rowStatuses;

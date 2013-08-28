@@ -35,8 +35,8 @@ public:
 	SQLLEN colAttribute(SQLUSMALLINT col, SQLUSMALLINT fieldID);
 	std::wstring colAttribute_String(SQLUSMALLINT col, SQLUSMALLINT fieldID);
 
-	SQLLEN GetRowCount();
-	bool IsNoCount();
+	SQLLEN resultRowCount();
+	bool isNoCount();
 
 	void SetFetchCount(SQLULEN fetchCount);
 	void SetColWiseBind();
